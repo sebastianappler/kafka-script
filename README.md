@@ -1,8 +1,13 @@
 # Kafka script
 ## Prequsites
-You need to have apache kafka available on your system.
+You need to have `Apache kafka` and `java` available on your system.
 
-Here's a quick example of adding the apache kafka binaries to your user-folder
+Install java:
+``` sh
+sudo apt install openjdk-11-jdk-headless
+```
+
+Manual install of apache kafka:
 ``` sh
 curl -LO https://downloads.apache.org/kafka/2.8.0/kafka_2.13-2.8.0.tgz
 tar -xvf kafka_2.13-2.8.0.tgz
