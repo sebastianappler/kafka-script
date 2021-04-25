@@ -1,19 +1,25 @@
 # Kafka script
+## Prequsites
+You need to have apache kafka available on your system.
+
+Here's a quick example of adding the apache kafka binaries to your user-folder
+``` sh
+curl -LO https://downloads.apache.org/kafka/2.8.0/kafka_2.13-2.8.0.tgz
+tar -xvf kafka_2.13-2.8.0.tgz
+mv kafka_2.13-2.8.0 ~/kafka
+```
 
 ## Usage
-
-Lets assume you have a just added the [https://kafka.apache.org/downloads](kafka binaries) in `/kafka`.
-
 We will generate the private key and a truststore that can be shared
 between all brokers and clients in kafka.
 
 Edit the settings for `kafka-generate-key-truststore.sh` and run:
 ``` sh
-cd /kafka
+cd ~/kafka
 git clone https://github.com/sebastianappler/kafka-script script
 
 mkdir ssl
-cd /kafka/ssl
+cd ssl
 
 cp ../script/kafka-generate-key-truststore.sh .
 bash kafka-generate-key-truststore.sh
@@ -65,10 +71,10 @@ ssl.client.auth=required
 ssl.keystore.type=JKS
 ssl.truststore.type=JKS
 
-ssl.keystore.location=/kafka/ssl/server0/keystore/kafka.keystore.jks
+ssl.keystore.location=~/kafka/ssl/server0/keystore/kafka.keystore.jks
 ssl.keystore.password=kafka123
 ssl.key.password=kafka123
-ssl.truststore.location=/kafka/ssl/truststore/kafka.truststore.jks
+ssl.truststore.location=~/kafka/ssl/truststore/kafka.truststore.jks
 ssl.truststore.password=kafka123
 ```
 `config/consumer.properties`
@@ -77,15 +83,15 @@ ssl.truststore.password=kafka123
 bootstrap.servers=localhost:29092
 
 security.protocol=SSL
-ssl.keystore.location=/kafka/ssl/client/keystore/kafka.keystore.jks
+ssl.keystore.location=~/kafka/ssl/client/keystore/kafka.keystore.jks
 ssl.keystore.password=kafka123
 ssl.key.password=kafka123
-ssl.truststore.location=/kafka/ssl/truststore/kafka.truststore.jks
+ssl.truststore.location=~/kafka/ssl/truststore/kafka.truststore.jks
 ssl.truststore.password=kafka123
 ```
 
 ## Run kafka
-To run the apache kafka scripts make sure you add `/kafka/bin` to your `$PATH`
+To run the apache kafka scripts make sure you add `~/kafka/bin` to your `$PATH`
 
 ``` sh
 # Start Zookeeper and Kafka Broker
@@ -97,9 +103,9 @@ kafka-server-start.sh -daemon ../config/server0.properties
 34818 Jps
 14220 QuorumPeerMain
 # If you dont see any entries when running `jps` you 
-# can check `/kafka/logs/server.log` for errors.
+# can check `~/kafka/logs/server.log` for errors.
 
-# Topic (if you dont have one already)
+# Topic (if you don't have one already)
 kafka-topics.sh --zookeeper localhost:2181 --create --topic test-topic --partitions 1 --replication-factor 1
 
 # Producer and consumer
