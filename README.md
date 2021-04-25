@@ -2,15 +2,17 @@
 
 ## Usage
 
-Lets assume you are running a kafka cluster in `/kafka` and have an
-empty folder `/kafka/ssl` and this repo checked out out in 
-`/kafka/script`.
+Lets assume you have a just added the [https://kafka.apache.org/downloads](kafka binaries) in `/kafka`.
 
 We will generate the private key and a truststore that can be shared
 between all brokers and clients in kafka.
 
 Edit the settings for `kafka-generate-key-truststore.sh` and run:
 ``` sh
+cd /kafka
+git clone https://github.com/sebastianappler/kafka-script script
+
+mkdir ssl
 cd /kafka/ssl
 
 cp ../script/kafka-generate-key-truststore.sh .
@@ -82,3 +84,29 @@ ssl.truststore.location=/kafka/ssl/truststore/kafka.truststore.jks
 ssl.truststore.password=kafka123
 ```
 
+## Run kafka
+To run the apache kafka scripts make sure you add `/kafka/bin` to your `$PATH`
+
+``` sh
+# Start Zookeeper and Kafka Broker
+zookeeper-server-start.sh -daemon ../config/zookeeper.properties
+kafka-server-start.sh -daemon ../config/server0.properties
+
+>jps
+30161 Kafka
+34818 Jps
+14220 QuorumPeerMain
+# If you dont see any entries when running `jps` you 
+# can check `/kafka/logs/server.log` for errors.
+
+# Topic (if you dont have one already)
+kafka-topics.sh --zookeeper localhost:2181 --create --topic test-topic --partitions 1 --replication-factor 1
+
+# Producer and consumer
+kafka-console-producer.sh --broker-list localhost:29092 --topic test-topic --producer.config ../config/producer.properties
+> Test message!
+Ctrl+C
+
+kafka-console-consumer.sh --bootstrap-server localhost:29092 --topic test-topic --from-beginning --consumer.config ../config/consumer.properties
+Test message!
+```
