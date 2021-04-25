@@ -2,8 +2,9 @@
 
 ## Usage
 
-Lets assume you are running a kafka cluster in /kafka and have an
-empty folder `/kafka/ssl` and this repo checkout out in /kafka/script./
+Lets assume you are running a kafka cluster in `/kafka` and have an
+empty folder `/kafka/ssl` and this repo checked out out in 
+`/kafka/script`.
 
 We will generate the private key and a truststore that can be shared
 between all brokers and clients in kafka.
@@ -21,6 +22,7 @@ truststore
 >ls trustore
 ca-key kafka.truststore.jks
 ```
+
 
 Now we will generate and sign a keystore for server0.
 If you changed settings in previous script make sure they match the 
@@ -43,7 +45,8 @@ kafka.keystore.jks
 ## Config broker and client 
 
 To activate two-way SSL authentication for a server (we call it server0) 
-and a client (can be both consumer and producer).
+and a client (can be both consumer and producer) we need to add some
+settings to the properties-files.
 
 Please note that these aren't complete configurations but these settings the need
 to be set in order for SSL to work.
@@ -66,7 +69,8 @@ ssl.key.password=kafka123
 ssl.truststore.location=/kafka/ssl/truststore/kafka.truststore.jks
 ssl.truststore.password=kafka123
 ```
-`config/consumer.properties` and `config/producer.properties`
+`config/consumer.properties`
+`config/producer.properties`
 ``` java-properties
 bootstrap.servers=localhost:29092
 
