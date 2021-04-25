@@ -77,10 +77,10 @@ ssl.client.auth=required
 ssl.keystore.type=JKS
 ssl.truststore.type=JKS
 
-ssl.keystore.location=~/kafka/ssl/server0/keystore/kafka.keystore.jks
+ssl.keystore.location/home/you/kafka/ssl/server0/keystore/kafka.keystore.jks
 ssl.keystore.password=kafka123
 ssl.key.password=kafka123
-ssl.truststore.location=~/kafka/ssl/truststore/kafka.truststore.jks
+ssl.truststore.location/home/you/kafka/ssl/truststore/kafka.truststore.jks
 ssl.truststore.password=kafka123
 ```
 `config/consumer.properties` & `config/producer.properties`
@@ -88,10 +88,10 @@ ssl.truststore.password=kafka123
 bootstrap.servers=localhost:29092
 
 security.protocol=SSL
-ssl.keystore.location=~/kafka/ssl/client/keystore/kafka.keystore.jks
+ssl.keystore.location/home/you/kafka/ssl/client/keystore/kafka.keystore.jks
 ssl.keystore.password=kafka123
 ssl.key.password=kafka123
-ssl.truststore.location=~/kafka/ssl/truststore/kafka.truststore.jks
+ssl.truststore.location/home/you/kafka/ssl/truststore/kafka.truststore.jks
 ssl.truststore.password=kafka123
 ```
 
@@ -121,3 +121,68 @@ Ctrl+c
 kafka-console-consumer.sh --bootstrap-server localhost:29092 --topic test-topic --from-beginning --consumer.config ../config/consumer.properties
 Test message!
 ```
+
+# Zookeeper & broker SSL
+
+We will generate a different private key since zookeeper has
+it's own SSL configuration.
+
+Update the scripts to make the filenames match zookeeper `kafka.truststore.jks`->`zookeeper.truststore.jks`.
+
+``` sh
+cd ~/kafka/ssl
+mkdir zookeeper
+cd zookeeper
+
+cp ~/kafka/script/kafka-generate-key-truststore.sh .
+cp ~/kafka/script/kafka-generate-keystore.sh .
+
+# Edit the files and change `kafka.truststore.jks`->`zookeeper.truststore.jks`
+# Also feel free to change the password
+vi kafka-generate-key-truststore.sh
+vi kafka-generate-keystore.sh
+
+bash kafka-generate-key-truststore.sh
+bash kafka-generate-keystore.sh
+
+mkdir server0
+cd server0
+
+cp ../kafka-generate-keystore.sh .
+bash kafka-generate-keystore.sh
+```
+
+Update `zookeeper.properties`
+
+``` java-properties
+secureClientPort=2182
+
+serverCnxnFactory=org.apache.zookeeper.server.NettyServerCnxnFactory
+authProvider.x509=org.apache.zookeeper.server.auth.X509AuthenticationProvider
+
+ssl.keyStore.location=/home/you/kafka/ssl/zookeeper/keystore/zookeeper.keystore.jks
+ssl.keyStore.password=zookeeper123
+ssl.trustStore.location=/home/you/kafka/ssl/zookeeper/truststore/zookeeper.truststore.jks
+ssl.trustStore.password=zookeeper123
+```
+
+Update `server0.properties`
+
+``` java-properties
+
+zookeeper.connect=localhost:2182
+
+zookeeper.ssl.client.enable=true
+zookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty
+
+zookeeper.ssl.keystore.location=/home/you/kafka/ssl/zookeeper/server0/keystore/zookeeper.keystore.jks
+zookeeper.ssl.keystore.password=zookeeper123
+zookeeper.ssl.key.password=zookeeper123
+zookeeper.ssl.truststore.location=/home/you/kafka/ssl/zookeeper/truststore/zookeeper.truststore.jks
+zookeeper.ssl.truststore.password=zookeeper123
+
+zookeeper.set.acl=true
+```
+
+Now you should be able to run the examples from [Run kafka with SSL](### Run kafka with ssl).
+Note that the zookeeper port 2181 can still be used for `kafka-topic.sh`.
