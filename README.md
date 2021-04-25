@@ -1,8 +1,6 @@
-# Kafka
+# Kafka script
 
-## Script
-
-### Usage
+## Usage
 
 Lets assume you are running a kafka cluster in /kafka and have an
 empty folder `/kafka/ssl` and this repo checkout out in /kafka/script./
@@ -42,7 +40,7 @@ keystore
 kafka.keystore.jks
 ```
 
-### Config broker and client 
+## Config broker and client 
 
 To activate two-way SSL authentication for a server (we call it server0) 
 and a client (can be both consumer and producer).
