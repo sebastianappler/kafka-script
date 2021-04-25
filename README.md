@@ -184,5 +184,5 @@ zookeeper.ssl.truststore.password=zookeeper123
 zookeeper.set.acl=true
 ```
 
-Now you should be able to run the examples from [Run kafka with SSL](### Run kafka with ssl).
+Now you should be able to run the examples from [Run kafka with ssl](###-run-kafka-with-ssl).
 Note that the zookeeper port 2181 can still be used for `kafka-topic.sh`.
