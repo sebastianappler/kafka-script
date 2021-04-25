@@ -1,5 +1,7 @@
 # Kafka script
-## Prequsites
+
+## Kafka & clients with SSL
+### Prequsites
 You need to have `Apache kafka` and `java` available on your system.
 
 Install java:
@@ -14,7 +16,7 @@ tar -xvf kafka_2.13-2.8.0.tgz
 mv kafka_2.13-2.8.0 ~/kafka
 ```
 
-## Usage
+### Usage
 We will generate the private key and a truststore that can be shared
 between all brokers and clients in kafka.
 
@@ -36,7 +38,6 @@ truststore
 ca-key kafka.truststore.jks
 ```
 
-
 Now we will generate and sign a keystore for server0.
 If you changed settings in previous script make sure they match the 
 settings in this script, for example `CN` must be same.
@@ -55,7 +56,7 @@ keystore
 kafka.keystore.jks
 ```
 
-## Config broker and client 
+### Config broker and client 
 
 To activate two-way SSL authentication for a server (we call it server0) 
 and a client (can be both consumer and producer) we need to add some
@@ -82,8 +83,7 @@ ssl.key.password=kafka123
 ssl.truststore.location=~/kafka/ssl/truststore/kafka.truststore.jks
 ssl.truststore.password=kafka123
 ```
-`config/consumer.properties`
-`config/producer.properties`
+`config/consumer.properties` & `config/producer.properties`
 ``` java-properties
 bootstrap.servers=localhost:29092
 
@@ -95,8 +95,8 @@ ssl.truststore.location=~/kafka/ssl/truststore/kafka.truststore.jks
 ssl.truststore.password=kafka123
 ```
 
-## Run kafka
-To run the apache kafka scripts make sure you add `~/kafka/bin` to your `$PATH`
+### Run kafka with ssl
+To run the apache kafka scripts make sure you add `$HOME/kafka/bin` to your `$PATH`.
 
 ``` sh
 # Start Zookeeper and Kafka Broker
@@ -116,7 +116,7 @@ kafka-topics.sh --zookeeper localhost:2181 --create --topic test-topic --partiti
 # Producer and consumer
 kafka-console-producer.sh --broker-list localhost:29092 --topic test-topic --producer.config ../config/producer.properties
 > Test message!
-Ctrl+C
+Ctrl+c
 
 kafka-console-consumer.sh --bootstrap-server localhost:29092 --topic test-topic --from-beginning --consumer.config ../config/consumer.properties
 Test message!
