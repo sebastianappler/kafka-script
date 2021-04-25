@@ -62,8 +62,8 @@ To activate two-way SSL authentication for a server (we call it server0)
 and a client (can be both consumer and producer) we need to add some
 settings to the properties-files.
 
-Please note that these aren't complete configurations but these settings the need
-to be set in order for SSL to work.
+Please note that these aren't complete configurations but these are the settings
+needed in order for SSL to work.
 
 `config/server0.properties`
 ``` java-properties
@@ -152,7 +152,7 @@ cp ../kafka-generate-keystore.sh .
 bash kafka-generate-keystore.sh
 ```
 
-Update `zookeeper.properties`
+Update `config/zookeeper.properties`
 
 ``` java-properties
 secureClientPort=2182
@@ -166,7 +166,7 @@ ssl.trustStore.location=/home/you/kafka/ssl/zookeeper/truststore/zookeeper.trust
 ssl.trustStore.password=zookeeper123
 ```
 
-Update `server0.properties`
+Update `config/server0.properties`
 
 ``` java-properties
 
